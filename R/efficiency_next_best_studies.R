@@ -1,4 +1,4 @@
-#' FUNCTION TO GET NEXT BEST STUDIES
+#' Function to get the "Best Next Studies"
 #'
 #' @param data - input data
 #' @param variables - list of variables to include in the design matrix (should match with the column names of data)
@@ -18,11 +18,6 @@ efficiency_next_best_studies <- function(data, variables, labels, corrvar, naval
   #labels = list of labels for variables
   #corrvar = name of the column corresponding to correlation coefficients
   #naval = value of variable indicating the variable cannot be identified in the study
-
-  ##LOAD REQUIRED PACKAGES
-  suppressPackageStartupMessages({
-    require(dplyr)   #for better manipulating data
-  })
 
   ##SETTINGS
   next_best_studies_A = next_best_studies_D = data.frame()

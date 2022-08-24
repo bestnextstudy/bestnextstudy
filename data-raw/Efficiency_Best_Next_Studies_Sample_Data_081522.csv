@@ -1,0 +1,31 @@
+Year,Exchange,Market,Location,CS_Scale_Items,CS_Scale_Points,Retention_Measure,Corr
+2000,Services,B2C,North America,Single Item,5,Intention,0.68
+2005,Services,B2B,North America,Single Item,5,Behavior,0.235
+2005,Services,B2C,Europe,Multiple Items,10,Intention,0.155
+2005,Services,B2C,North America,Multiple Items,7,Intention,0.78
+2005,Goods,B2C,North America,Multiple Items,7,Behavior,0.07
+2006,Mixed,Mixed,North America,Multiple Items,10,Intention,0.488
+2006,Goods,B2C,North America,Multiple Items,7,Intention,0.53
+2006,Services,Mixed,North America,Multiple Items,7,Intention,0.77
+2007,Services,B2C,North America,Single Item,10,Intention,0.425
+2007,Services,B2B,Europe,Multiple Items,7,Intention,0.674
+2009,Services,B2C,Europe,Multiple Items,7,Intention,0.515
+2009,Services,B2C,North America,Multiple Items,7,Intention,0.42
+2011,Services,B2B,North America,Single Item,5,Intention,0.82
+2011,Services,B2C,Asia,Multiple Items,5,Intention,0.278
+2011,Goods,B2C,Europe,Multiple Items,7,Intention,0.44
+2013,Services,B2C,Asia,Multiple Items,7,Intention,0.59
+2013,Services,B2C,North America,Multiple Items,7,Intention,0.56
+2014,Services,B2C,Europe,Multiple Items,5,Intention,0.53
+2014,Goods,B2C,Europe,Multiple Items,7,Behavior,0.15
+2014,Goods,B2C,Europe,Multiple Items,7,Behavior,0.09
+2016,Mixed,B2C,North America,Multiple Items,7,Intention,0.77
+2017,Mixed,B2B,North America,Single Item,7,Intention,0.7271
+2017,Services,B2C,North America,Multiple Items,7,Intention,0.01
+2017,Services,B2C,Asia,Multiple Items,7,Intention,0.6
+2017,Mixed,B2C,North America,Single Item,10,Intention,0.8
+2018,Goods,B2B,North America,Single Item,7,Intention,0.7598
+2018,Mixed,B2B,North America,Single Item,7,Intention,0.6868
+2018,Goods,B2B,North America,Single Item,7,Intention,0.2031
+2019,Goods,B2B,North America,Single Item,7,Intention,0.7367
+2019,Goods,B2B,North America,Single Item,7,Intention,0.6355

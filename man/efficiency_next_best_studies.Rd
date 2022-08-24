@@ -2,7 +2,7 @@
 % Please edit documentation in R/efficiency_next_best_studies.R
 \name{efficiency_next_best_studies}
 \alias{efficiency_next_best_studies}
-\title{FUNCTION TO GET NEXT BEST STUDIES}
+\title{Function to get the "Best Next Studies"}
 \usage{
 efficiency_next_best_studies(
   data,
@@ -30,5 +30,5 @@ efficiency_next_best_studies(
 - List of two data frames (one based on A-efficiency and another based on D-efficiency)
 }
 \description{
-FUNCTION TO GET NEXT BEST STUDIES
+Function to get the "Best Next Studies"
 }

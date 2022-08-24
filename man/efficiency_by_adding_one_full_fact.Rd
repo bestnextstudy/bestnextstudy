@@ -2,7 +2,7 @@
 % Please edit documentation in R/efficiency_by_adding_one_full_fact.R
 \name{efficiency_by_adding_one_full_fact}
 \alias{efficiency_by_adding_one_full_fact}
-\title{FUNCTION TO CALCULATE EFFICIENCY AFTER ADDING A NEW STUDY}
+\title{Function to calculate efficiency after adding a new study}
 \usage{
 efficiency_by_adding_one_full_fact(data, variables, labels, corrvar, naval)
 }
@@ -21,5 +21,5 @@ efficiency_by_adding_one_full_fact(data, variables, labels, corrvar, naval)
 -  a_efficiency, d_efficiency
 }
 \description{
-FUNCTION TO CALCULATE EFFICIENCY AFTER ADDING A NEW STUDY
+Function to calculate efficiency after adding a new study
 }

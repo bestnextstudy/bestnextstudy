@@ -1,4 +1,4 @@
-#' FUNCTION TO CALCULATE EFFICIENTY (D- AND A-EFFICIENCY)
+#' Function to Calculate Efficiency (D- AND A-EFFICIENCY)
 #'
 #' @param data - input data
 #' @param variables - list of variables to include in the design matrix (should match with the column names of data)
@@ -15,13 +15,6 @@ efficiency <- function(data, variables, labels, corrvar){
   #variables = list of variables to include in the design matrix (should match with the column names of data)
   #labels = list of labels for variables
   #corrvar = name of the column corresponding to correlation coefficients
-
-  ##LOAD REQUIRED PACKAGES
-  suppressPackageStartupMessages({
-    require(dplyr)      #for better manipulating data
-    require(far)        #for orthonormalization
-    require(matrixcalc) #for matrix inverse
-  })
 
   ##CREATE DESIGN MATRIX
   Z <- lapply(data[variables], factor)  #dummy code variables in the data

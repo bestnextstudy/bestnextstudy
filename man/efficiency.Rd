@@ -2,7 +2,7 @@
 % Please edit documentation in R/efficiency.R
 \name{efficiency}
 \alias{efficiency}
-\title{FUNCTION TO CALCULATE EFFICIENTY (D- AND A-EFFICIENCY)}
+\title{Function to Calculate Efficiency (D- AND A-EFFICIENCY)}
 \usage{
 efficiency(data, variables, labels, corrvar)
 }
@@ -19,5 +19,5 @@ efficiency(data, variables, labels, corrvar)
 -  Number of studies, a_efficiency, d_efficiency
 }
 \description{
-FUNCTION TO CALCULATE EFFICIENTY (D- AND A-EFFICIENCY)
+Function to Calculate Efficiency (D- AND A-EFFICIENCY)
 }

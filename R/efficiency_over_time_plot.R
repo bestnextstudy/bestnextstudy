@@ -1,4 +1,4 @@
-#' FUNCTION TO PLOT EFFICIENCIES OVER TIME
+#' Function to plot efficiency over time
 #'
 #' @param data - Output from 'efficiency_over_time' function
 #'
@@ -11,7 +11,6 @@ efficiency_over_time_plot<- function(data){
   eff_by_yr_true = as.data.frame(eff_over_time$eff_by_yr_true) #true efficiency
   eff_by_yr_opt = as.data.frame(eff_over_time$eff_by_yr_opt)   #optimal efficiency
   ##PLOT
-  require(ggplot2)
   #STACK DATA
   eff_ov_time_true_a = cbind(eff_by_yr_true[c("End Year", "A-Efficiency")], "A-Efficiency: True")
   eff_ov_time_true_d = cbind(eff_by_yr_true[c("End Year", "D-Efficiency")], "D-Efficiency: True")

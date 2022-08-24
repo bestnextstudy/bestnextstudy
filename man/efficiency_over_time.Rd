@@ -2,7 +2,7 @@
 % Please edit documentation in R/efficiency_over_time.R
 \name{efficiency_over_time}
 \alias{efficiency_over_time}
-\title{FUNCTION TO GET EFFICIENCIES OVER TIME}
+\title{Function to get efficiency over time}
 \usage{
 efficiency_over_time(data, variables, labels, corrvar, naval, yrvar, yrs)
 }
@@ -25,5 +25,5 @@ efficiency_over_time(data, variables, labels, corrvar, naval, yrvar, yrs)
 - List of two data frames (one for true efficiency and another for optimal efficiency)
 }
 \description{
-FUNCTION TO GET EFFICIENCIES OVER TIME
+Function to get efficiency over time
 }

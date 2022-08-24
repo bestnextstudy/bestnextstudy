@@ -1,4 +1,4 @@
-#' FUNCTION TO GET EFFICIENCIES OVER TIME
+#' Function to get efficiency over time
 #'
 #' @param data - input data
 #' @param variables - list of variables to include in the design matrix (should match with the column names of data)
@@ -7,7 +7,6 @@
 #' @param naval - value of variable indicating the variable cannot be identified in the study
 #' @param yrvar -  name of the column corresponding to the year
 #' @param yrs - vector of years to create the block of studies
-#'
 #' @return - List of two data frames (one for true efficiency and another for optimal efficiency)
 #' @export
 #'
@@ -22,10 +21,6 @@ efficiency_over_time <- function(data, variables, labels, corrvar, naval, yrvar,
   #yrvar = name of the column corresponding to the year
   #yrs = vector of years to create the block of studies
 
-  ##LOAD REQUIRED PACKAGES
-  suppressPackageStartupMessages({
-    require(dplyr)   #for better manipulating data
-  })
 
   ##TRUE EFFICIENCY
   #SETTINGS

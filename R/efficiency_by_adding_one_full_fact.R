@@ -1,13 +1,10 @@
-
-
-#' FUNCTION TO CALCULATE EFFICIENCY AFTER ADDING A NEW STUDY
+#' Function to calculate efficiency after adding a new study
 #'
 #' @param data - input data
 #' @param variables - list of variables to include in the design matrix (should match with the column names of data)
 #' @param labels - list of labels for variables
 #' @param corrvar - name of the column corresponding to correlation coefficients
 #' @param naval - value of variable indicating the variable cannot be identified in the study
-#'
 #' @return -  a_efficiency, d_efficiency
 #' @export
 #'
@@ -19,11 +16,6 @@ efficiency_by_adding_one_full_fact <- function(data, variables, labels, corrvar,
   #labels = list of labels for variables
   #corrvar = name of the column corresponding to correlation coefficients
   #naval = value of variable indicating the variable cannot be identified in the study
-
-  ##LOAD REQUIRED PACKAGES
-  suppressPackageStartupMessages({
-    require(dplyr)   #for better manipulating data
-  })
 
   ##CREATE DESIGN MATRIX
   Z <- lapply(data[variables], factor)  #dummy code variables in the data

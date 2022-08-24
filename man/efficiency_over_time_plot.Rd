@@ -2,7 +2,7 @@
 % Please edit documentation in R/efficiency_over_time_plot.R
 \name{efficiency_over_time_plot}
 \alias{efficiency_over_time_plot}
-\title{FUNCTION TO PLOT EFFICIENCIES OVER TIME}
+\title{Function to plot efficiency over time}
 \usage{
 efficiency_over_time_plot(data)
 }
@@ -13,5 +13,5 @@ efficiency_over_time_plot(data)
 - Plot of True and Optimal A and D efficiency
 }
 \description{
-FUNCTION TO PLOT EFFICIENCIES OVER TIME
+Function to plot efficiency over time
 }
