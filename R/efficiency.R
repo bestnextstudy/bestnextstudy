@@ -4,7 +4,7 @@
 #' @param variables - list of variables to include in the design matrix (should match with the column names of data)
 #' @param labels - list of labels for variables
 #' @param corrvar - name of the column corresponding to correlation coefficients in the input data
-#'
+#' @import dplyr ggplot2 far matrixcalc
 #' @return -  Number of studies, a_efficiency, d_efficiency
 #' @export
 #'

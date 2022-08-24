@@ -6,7 +6,6 @@
 #' @param corrvar - name of the column corresponding to correlation coefficients
 #' @param naval - value of variable indicating the variable cannot be identified in the study
 #' @param nstudies_add - number of next studies
-#'
 #' @return - List of two data frames (one based on A-efficiency and another based on D-efficiency)
 #' @export
 #'

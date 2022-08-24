@@ -9,7 +9,6 @@
 #' @param yrs - vector of years to create the block of studies
 #' @return - List of two data frames (one for true efficiency and another for optimal efficiency)
 #' @export
-#'
 #' @examples
 efficiency_over_time <- function(data, variables, labels, corrvar, naval, yrvar, yrs){
   ##INPUTS

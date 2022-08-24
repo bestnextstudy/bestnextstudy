@@ -1,7 +1,6 @@
 #' Function to plot efficiency over time
 #'
 #' @param data - Output from 'efficiency_over_time' function
-#'
 #' @return - Plot of True and Optimal A and D efficiency
 #' @export
 #'

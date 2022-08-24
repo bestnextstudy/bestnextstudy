@@ -7,8 +7,9 @@
 #' @param naval - value of variable indicating the variable cannot be identified in the study
 #' @return -  a_efficiency, d_efficiency
 #' @export
-#'
 #' @examples
+
+
 efficiency_by_adding_one_full_fact <- function(data, variables, labels, corrvar, naval){
   ##INPUTS
   #data = input data
