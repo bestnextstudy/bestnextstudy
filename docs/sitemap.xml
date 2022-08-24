@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>/404.html</loc>
+  </url>
+  <url>
+    <loc>/authors.html</loc>
+  </url>
+  <url>
+    <loc>/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/efficiency.html</loc>
+  </url>
+  <url>
+    <loc>/reference/efficiency_by_adding_one_full_fact.html</loc>
+  </url>
+  <url>
+    <loc>/reference/efficiency_next_best_studies.html</loc>
+  </url>
+  <url>
+    <loc>/reference/efficiency_over_time.html</loc>
+  </url>
+  <url>
+    <loc>/reference/efficiency_over_time_plot.html</loc>
+  </url>
+  <url>
+    <loc>/reference/index.html</loc>
+  </url>
+</urlset>
