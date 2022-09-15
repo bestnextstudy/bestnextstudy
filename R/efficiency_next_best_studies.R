@@ -42,8 +42,8 @@ efficiency_next_best_studies <- function(data, variables, labels, corrvar, naval
   next_best_studies_D = next_best_studies_D[c(variables, "d_efficiency")]
   colnames(next_best_studies_A) = c(variables, "A-efficiency")
   colnames(next_best_studies_D) = c(variables, "D-efficiency")
-  next_best_studies_A$Study_No = row_number()+nrow(data)
- next_best_studies_D$Study_No = row_number()+nrow(data)
+  next_best_studies_A = next_best_studies_A %>% mutate(`Study No.` = row_number()+nrow(data))%>% relocate(`Study No.`)
+  next_best_studies_D = next_best_studies_D %>% mutate(`Study No.` = row_number()+nrow(data))%>% relocate(`Study No.`)
 
   output = list(next_best_studies_A = next_best_studies_A, next_best_studies_D = next_best_studies_D)
   return(output)
