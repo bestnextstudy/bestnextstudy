@@ -3,7 +3,7 @@
 #' @param data - Output from 'efficiency_over_time' function
 #' @return - Plot of True and Optimal A and D efficiency
 #' @export
-#'
+#' @import ggrepel
 #' @examples
 efficiency_over_time_plot<- function(data){
   eff_over_time = data
