@@ -9,6 +9,7 @@
 #' @return - List of two data frames (one based on A-efficiency and another based on D-efficiency)
 #' @export
 #'
+#'
 #' @examples
 efficiency_next_best_studies <- function(data, variables, labels, corrvar, naval, nstudies_add){
   ##INPUTS
