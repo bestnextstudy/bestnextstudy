@@ -1,0 +1,14 @@
+Package: bestnextstudy
+Type: Package
+Title: Identify the Next Best Studies based on Meta-Analysis
+Version: 0.1.0
+Author: Best Next Study Team
+Maintainer: Best Next Study Team <bestnextstudy@gmail.com>
+Description: Once you have finished a meta-analysis, this package can help you measure the D-Efficiency and A-Efficiency of the curremt literature.    You can also use this package to identify the next set of studies that imprrove the efficiency.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
+Depends: R (>= 3.1.0)
+Imports: dplyr, ggplot2,far,matrixcalc
+URL: https://bestnextstudy.github.io/

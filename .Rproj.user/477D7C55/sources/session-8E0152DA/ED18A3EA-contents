@@ -1,0 +1,214 @@
+####FUNCTIONS TO GET EFFICIENCIES, EFFICIENCIES OVER TIME, AND NEXT BEST STUDIES
+###FUNCTION TO CALCULATE EFFICIENTY (D- AND A-EFFICIENCY)
+efficiency <- function(data, variables, labels, corrvar){
+  ##INPUTS
+  #data = input data
+  #variables = list of variables to include in the design matrix (should match with the column names of data)
+  #labels = list of labels for variables
+  #corrvar = name of the column corresponding to correlation coefficients
+  
+  ##LOAD REQUIRED PACKAGES
+  suppressPackageStartupMessages({
+    require(dplyr)      #for better manipulating data
+    require(far)        #for orthonormalization
+    require(matrixcalc) #for matrix inverse
+  })
+  
+  ##CREATE DESIGN MATRIX
+  Z <- lapply(data[variables], factor)  #dummy code variables in the data
+  Z <- data.frame(Z)  #convert Z to a matrix with factor variables
+  
+  ##STANDARDIZED ORTHOGONAL CONTRAST CODE THE DESIGN MATRIX
+  new_Z <- list() #standardized orthogonal contrast coding of Z
+  for(i in 1:length(variables)){
+    variable_name <- variables[i]
+    # print(variable_name)
+    subset_data <- as.data.frame(Z[i])
+    levels <- levels(subset_data[, 1])
+    ##STANDARDIZED ORTHOGONAL CONTRAST CODING
+    EC <- cbind(rep(1, each = length(levels)), contr.sum(levels(subset_data[,1])))
+    SOCC <- orthonormalization(EC)*(length(levels))^(1/2)
+    SOCC <- SOCC[, (2:(length(levels)))]
+    contrasts(subset_data[, 1]) <- SOCC
+    new_Z[[i]] <- subset_data
+  }
+  
+  ##UPDATE DESIGN MATRIX TO AVOID SINGULARITY OF (Z'Z); Z IS NOT OF FULL RANK
+  new_Z <-  cbind(data[corrvar] , data.frame(new_Z))  #first column is the correlation (dependent variable)
+  frmla <- as.formula(paste(colnames(new_Z)[1], paste(colnames(new_Z)[2:(ncol(new_Z))], sep = "", collapse = " + "), sep = " ~ "))
+  reg <- lm(frmla, data = new_Z)
+  coeff <- as.data.frame(reg$coefficients)
+  additional_drop <- as.list(names(which(rowSums(is.na(coeff)) > 0)))
+  occ_design <- as.data.frame(model.matrix(reg))
+  occ_design <- occ_design[, !(names(occ_design) %in% additional_drop)]
+  Z <- as.matrix(occ_design)
+  
+  ##CALCULATE D- AND A-EFFICIENCY
+  ZtZ <- t(Z) %*% Z
+  inv_ZtZ <- matrix.inverse(ZtZ)
+  Np <- dim(Z)[1]
+  p <- dim(Z)[2]  
+  trace <- sum(diag(inv_ZtZ))
+  det <- det(inv_ZtZ)
+  a_efficiency <- (1/(Np*(trace/p)))*100
+  d_efficiency <- (1/(Np*(det^(1/p))))*100
+  output <- cbind(N = nrow(Z), a_efficiency, d_efficiency)
+  
+  return(output)
+}
+
+###FUNCTION TO CALCULATE EFFICIENCY AFTER ADDING A NEW STUDY
+efficiency_by_adding_one_full_fact <- function(data, variables, labels, corrvar, naval){
+  ##INPUTS
+  #data = input data
+  #variables = list of variables to include in the design matrix (should match with the column names of data)
+  #labels = list of labels for variables
+  #corrvar = name of the column corresponding to correlation coefficients
+  #naval = value of variable indicating the variable cannot be identified in the study
+  
+  ##LOAD REQUIRED PACKAGES
+  suppressPackageStartupMessages({
+    require(dplyr)   #for better manipulating data
+  })
+  
+  ##CREATE DESIGN MATRIX
+  Z <- lapply(data[variables], factor)  #dummy code variables in the data
+  Z <- data.frame(Z)  #convert Z to a matrix with factor variables
+  
+  ##FULL-FACTORIAL DESIGN
+  #GENERATE FULL FACTORIAL (I.E., ALL POSSIBLE COMBINATIONS OF Z)
+  nfactor = ncol(Z)
+  eval(parse(text = paste("hyper_grid <- expand.grid(", paste(paste("levels(Z[, ", c(1:nfactor), "])", sep = ""), collapse = ", "), ")", sep = "")))
+  names(hyper_grid) <- variables
+  #ADD COLUMN OF CORRELATIONS SO THAT THE FUNCTION "EFFICIENCY" CAN IDENTIFY SINGULARITY THROUGH LM
+  eval(parse(text = paste("hyper_grid$", corrvar, "<- 0", sep = "")))
+  #REMOVE LEVELS THAT DO NOT MAKE SENSE--I.E., THERE WILL BE NO STUDY THAT A FACTOR == naval
+  hyper_grid <- hyper_grid %>% filter_all(all_vars(. != naval))
+  
+  ##ADD ONE STUDY AT A TIME AND CALCULATE EFFICIENCY
+  study_eff <- data.frame()
+  for (j in 1:nrow(hyper_grid)){
+    data_new <- dplyr::bind_rows(data, hyper_grid[j, ])
+    add_eff <- efficiency(data = data_new, variables = variables, labels = labels, corrvar = corrvar)
+    study_eff <- rbind(study_eff, cbind(j, add_eff))
+  }
+  
+  output <- cbind(hyper_grid[variables], study_eff[c("a_efficiency", "d_efficiency")])
+  return(output)
+}
+
+###FUNCTION TO GET EFFICIENCIES OVER TIME
+efficiency_over_time <- function(data, variables, labels, corrvar, naval, yrvar, yrs){
+  ##INPUTS
+  #data = input data
+  #variables = list of variables to include in the design matrix (should match with the column names of data)
+  #labels = list of labels for variables
+  #corrvar = name of the column corresponding to correlation coefficients
+  #naval = value of variable indicating the variable cannot be identified in the study
+  #yrvar = name of the column corresponding to the year
+  #yrs = vector of years to create the block of studies
+  
+  ##LOAD REQUIRED PACKAGES
+  suppressPackageStartupMessages({
+    require(dplyr)   #for better manipulating data
+  })
+  
+  ##TRUE EFFICIENCY
+  #SETTINGS
+  eff_by_yr_true = matrix(0, nrow = length(yrs), ncol = 4)
+  colnames(eff_by_yr_true) = c("End Year", "N", "A-Efficiency", "D-Efficiency")
+  #EFFICIENCIES FOR EACH BLOCK OF STUDIES
+  for(i in 1:length(yrs)){
+    eff_by_yr_true[i, 1] = yrs[i]
+    Matrix_Input_Yr = filter(data, Year <= yrs[i])
+    eff = as.data.frame(efficiency(Matrix_Input_Yr, variables, labels, corrvar))
+    eff_by_yr_true[i, 2] = eff$N
+    eff_by_yr_true[i, 3] = eff$a_efficiency
+    eff_by_yr_true[i, 4] = eff$d_efficiency
+  }
+  
+  ##OPTIMAL EFFICIENCY (WHEN STARTING FROM 1981-2005 AND ADDING STUDIES TO EACH BLOCK OF EXISTING STUDIES--I.E., 1981-2005, 1981-2008, ...)
+  #SETTINGS
+  eff_by_yr_blk_opt = matrix(0, length(yrs), ncol = 4)
+  colnames(eff_by_yr_blk_opt) = c("End Year", "N", "A-Efficiency", "D-Efficiency")
+  #EFFICIENCIES FOR THE FIRST BLOCK OF STUDIES
+  eff_by_yr_blk_opt[1, 1] = yrs[1]
+  eval(parse(text = paste("eff_by_yr_blk_opt[1, 2] = as.data.frame(efficiency(filter(data, ", yrvar, " <= yrs[1]), variables, labels, corrvar))$N", sep = "")))
+  eval(parse(text = paste("eff_by_yr_blk_opt[1, 3] = as.data.frame(efficiency(filter(data, ", yrvar, " <= yrs[1]), variables, labels, corrvar))$a_efficiency", sep = "")))
+  eval(parse(text = paste("eff_by_yr_blk_opt[1, 4] = as.data.frame(efficiency(filter(data, ", yrvar, " <= yrs[1]), variables, labels, corrvar))$d_efficiency", sep = "")))
+  #ITERATE THROUGH BLOCKS OF YEARS
+  for(i in 1:(length(yrs) - 1)){
+    j = i + 1
+    eval(parse(text = paste("Matrix_Input_Init = filter(data, ", yrvar, " <= yrs[i])", sep = "")))  #initial set of studies
+    eval(parse(text = paste("Matrix_Input_Next = filter(data, ", yrvar, " <= yrs[j])", sep = "")))  #set of studies in the next block of years
+    Matrix_Input_A = Matrix_Input_D = Matrix_Input_Init #output matrix for each A- and D-efficiency
+    nstudies_init = nrow(Matrix_Input_Init)  #number of initial set of studies
+    nstudies_add = nrow(Matrix_Input_Next) - nstudies_init #number of studies to add (number of studies actually added in the next time frame)
+    #ITERATE THE PROCESS WITH THE NUMBER OF STUDIES TO ADD
+    for(k in 1:nstudies_add){
+      #IN EACH ITERATION, EXAMINE THE DESIGN THAT MAXIMIZES EFFICIENCY AND ADD IT TO THE SET OF STUDIES
+      #A-EFFICIENCY
+      eff_all_A = efficiency_by_adding_one_full_fact(Matrix_Input_A, variables, labels, corrvar, naval)
+      design_add_A = eff_all_A %>% top_n(n = 1, wt = a_efficiency)
+      eval(parse(text = paste("design_add_A$", corrvar, " = 0", sep = ""))) #need to check what this line is for...
+      Matrix_Input_A = bind_rows(Matrix_Input_A, design_add_A)
+      #D-EFFICIENCY
+      eff_all_D = efficiency_by_adding_one_full_fact(Matrix_Input_D, variables, labels, corrvar, naval)
+      design_add_D = eff_all_D %>% top_n(n = 1, wt = d_efficiency)
+      eval(parse(text = paste("design_add_D$", corrvar, " = 0", sep = ""))) #need to check what this line is for...
+      Matrix_Input_D = bind_rows(Matrix_Input_D, design_add_D)
+      cat("End year =", yrs[j], ":", k, "out of", nstudies_add, "studies added \n")
+    }
+    #CALCULATE EFFICIENCIES
+    eff_by_yr_blk_opt[j, 1] = yrs[j]
+    eff_by_yr_blk_opt[j, 2] = as.data.frame(efficiency(Matrix_Input_A, variables, labels, corrvar))$N
+    eff_by_yr_blk_opt[j, 3] = as.data.frame(efficiency(Matrix_Input_A, variables, labels, corrvar))$a_efficiency
+    eff_by_yr_blk_opt[j, 4] = as.data.frame(efficiency(Matrix_Input_D, variables, labels, corrvar))$d_efficiency
+  }
+  
+  output = list(eff_by_yr_true = eff_by_yr_true, eff_by_yr_opt = eff_by_yr_blk_opt)
+  return(output)
+}
+
+###FUNCTION TO GET NEXT BEST STUDIES
+efficiency_next_best_studies <- function(data, variables, labels, corrvar, naval, nstudies_add){
+  ##INPUTS
+  #data = input data
+  #variables = list of variables to include in the design matrix (should match with the column names of data)
+  #labels = list of labels for variables
+  #corrvar = name of the column corresponding to correlation coefficients
+  #naval = value of variable indicating the variable cannot be identified in the study
+  
+  ##LOAD REQUIRED PACKAGES
+  suppressPackageStartupMessages({
+    require(dplyr)   #for better manipulating data
+  })
+  
+  ##SETTINGS
+  next_best_studies_A = next_best_studies_D = data.frame()
+  Matrix_Input_A = Matrix_Input_D = data
+  
+  ##ITERATE THE PROCESS WITH THE NUMBER OF STUDIES TO ADD
+  for(i in 1:nstudies_add){ #loop through the number of studies to add
+    #A-EFFICIENCY
+    eff_all_A = efficiency_by_adding_one_full_fact(Matrix_Input_A, variables, labels, corrvar, naval)
+    design_add_A = eff_all_A %>% top_n(n = 1, wt = a_efficiency)
+    next_best_studies_A = bind_rows(next_best_studies_A, design_add_A)
+    eval(parse(text = paste("design_add_A$", corrvar, " = 0", sep = ""))) #need to check what this line is for...
+    Matrix_Input_A = bind_rows(Matrix_Input_A, design_add_A)
+    #D-EFFICIENCY
+    eff_all_D = efficiency_by_adding_one_full_fact(Matrix_Input_D, variables, labels, corrvar, naval)
+    design_add_D = eff_all_D %>% top_n(n = 1, wt = d_efficiency)
+    next_best_studies_D = bind_rows(next_best_studies_D, design_add_D)
+    eval(parse(text = paste("design_add_D$", corrvar, " = 0", sep = ""))) #need to check what this line is for...
+    Matrix_Input_D = bind_rows(Matrix_Input_D, design_add_D)
+    cat(i, "out of", nstudies_add, "studies added \n")
+  }
+  next_best_studies_A = next_best_studies_A[c(variables, "a_efficiency")]
+  next_best_studies_D = next_best_studies_D[c(variables, "d_efficiency")]
+  colnames(next_best_studies_A) = c(variables, "A-efficiency")
+  colnames(next_best_studies_D) = c(variables, "D-efficiency")
+  
+  output = list(next_best_studies_A = next_best_studies_A, next_best_studies_D = next_best_studies_D)
+  return(output)
+}

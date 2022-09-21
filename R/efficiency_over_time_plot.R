@@ -3,7 +3,6 @@
 #' @param data - Output from 'efficiency_over_time' function
 #' @return - Plot of True and Optimal A and D efficiency
 #' @export
-#' @import
 #' @examples
 efficiency_over_time_plot<- function(data){
   eff_over_time = data
@@ -23,7 +22,7 @@ efficiency_over_time_plot<- function(data){
                           linetype = factor(Label), shape = factor(Label))) +
     geom_line() +
     geom_point() +ylim(0,105)+
-    geom_text_repel(label = round(eff_ov_time$Efficiency,2), size = 3) +
+    geom_text(aes(label = round(Efficiency,2)), size = 3, vjust = -1) +
     scale_linetype_manual("",
                           values = c("solid", "longdash", "solid", "longdash"),
                           breaks = c("A-Efficiency: True", "A-Efficiency: Optimal", "D-Efficiency: True", "D-Efficiency: Optimal")) +
